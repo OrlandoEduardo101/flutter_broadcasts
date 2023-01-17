@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
+import com.google.gson.GsonBuilder
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
@@ -13,6 +15,9 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.io.Serializable
+
+private val gson = GsonBuilder().registerTypeAdapterFactory(BundleTypeAdapterFactory())
+    .create()
 
 class CustomBroadcastReceiver(
         val id: Int,
@@ -208,7 +213,7 @@ class FlutterBroadcastsPlugin : FlutterPlugin {
         methodCallHandler = null
         broadcastManager?.stopAll()
         broadcastManager = null
-    }    
+    }
 }
 
 /***
@@ -223,7 +228,7 @@ class FlutterBroadcastsPlugin : FlutterPlugin {
  */
 private fun normalize(x: Any?) : Any? {
 	if (
-        x == null 
+        x == null
         || x.equals(null)
         || x is Boolean
         || x is Int
@@ -245,6 +250,8 @@ private fun normalize(x: Any?) : Any? {
         return normalizeList(x)
     } else if (x is Map<*, *>) {
     	return normalizeMap(x)
+    } else if (x is Bundle) {
+        return gson.toJson(x)
     } else {
         return x.toString()
     }
