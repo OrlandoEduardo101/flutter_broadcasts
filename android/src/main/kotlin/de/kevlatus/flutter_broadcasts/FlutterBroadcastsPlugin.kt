@@ -20,9 +20,10 @@ private val gson = GsonBuilder().registerTypeAdapterFactory(BundleTypeAdapterFac
     .create()
 
 class CustomBroadcastReceiver(
-        val id: Int,
-        private val names: List<String>,
-        private val listener: (Any) -> Unit
+    val id: Int,
+    private val actions: List<String>,
+    private val categories: List<String>,
+    private val listener: (Any) -> Unit
 ) : BroadcastReceiver() {
     companion object {
         const val TAG: String = "CustomBroadcastReceiver"
@@ -30,7 +31,8 @@ class CustomBroadcastReceiver(
 
     private val intentFilter: IntentFilter by lazy {
         val intentFilter = IntentFilter()
-        names.forEach { intentFilter.addAction(it) }
+        actions.forEach { intentFilter.addAction(it) }
+        categories.forEach {intentFilter.addCategory(it) }
         intentFilter
     }
 
@@ -52,12 +54,12 @@ class CustomBroadcastReceiver(
 
     fun start(context: Context) {
         context.registerReceiver(this, intentFilter)
-        Log.d(TAG, "starting to listen for broadcasts: " + names.joinToString(";"))
+        Log.d(TAG, "starting to listen for broadcasts: " + actions.joinToString(";"))
     }
 
     fun stop(context: Context) {
         context.unregisterReceiver(this)
-        Log.d(TAG, "stopped listening for broadcasts: " + names.joinToString(";"))
+        Log.d(TAG, "stopped listening for broadcasts: " + actions.joinToString(";"))
     }
 }
 
@@ -100,15 +102,18 @@ class MethodCallHandlerImpl(
     private fun withReceiverArgs(
             call: MethodCall,
             result: Result,
-            func: (id: Int, names: List<String>) -> Unit
+            func: (id: Int, actions: List<String>, categories: List<String>) -> Unit
     ) {
         val id = call.argument<Int>("id")
                 ?: return result.error("1", "no receiver id provided", null)
 
-        val names = call.argument<List<String>>("names")
-                ?: return result.error("1", "no names provided", null)
+        val actions = call.argument<List<String>>("actions")
+                ?: return result.error("1", "no actions provided", null)
 
-        func(id, names)
+        val categories = call.argument<List<String>>("categories")
+            ?: return result.error("1", "no categories provided", null)
+
+        func(id, actions, categories)
     }
 
     private fun withBroadcastArgs(
@@ -123,8 +128,8 @@ class MethodCallHandlerImpl(
     }
 
     private fun onStartReceiver(call: MethodCall, result: Result) {
-        withReceiverArgs(call, result) { id, names ->
-            broadcastManager.startReceiver(CustomBroadcastReceiver(id, names) { broadcast ->
+        withReceiverArgs(call, result) { id, actions, categories ->
+            broadcastManager.startReceiver(CustomBroadcastReceiver(id, actions, categories) { broadcast ->
                 channel?.invokeMethod("receiveBroadcast", broadcast)
             })
             result.success(null)
@@ -132,7 +137,7 @@ class MethodCallHandlerImpl(
     }
 
     private fun onStopReceiver(call: MethodCall, result: Result) {
-        withReceiverArgs(call, result) { id, _ ->
+        withReceiverArgs(call, result) { id, _, _ ->
             broadcastManager.stopReceiver(id)
             result.success(null)
         }

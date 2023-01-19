@@ -50,12 +50,12 @@ void main() {
     });
 
     test("beforeStart", () async {
-      final receiver = BroadcastReceiver(names: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
       expect(receiver.isListening, isFalse);
     });
 
     test("start", () async {
-      final receiver = BroadcastReceiver(names: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
       await receiver.start();
       expect(receiver.isListening, isTrue);
 
@@ -73,11 +73,11 @@ void main() {
     });
 
     test("stop", () {
-      final receiver = BroadcastReceiver(names: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
     });
 
     test("toMap", () {
-      final receiver = BroadcastReceiver(names: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
     });
   });
 }

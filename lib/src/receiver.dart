@@ -17,15 +17,18 @@ class BroadcastReceiver {
   /// A list of message names to subscribe to.
   ///
   /// See [BroadcastMessage.name] for more details.
-  final List<String> names;
+  final List<String> actions;
+
+  /// A list of message categories to subscribe to.
+  final List<String> categories;
 
   StreamSubscription? _subscription;
 
-  /// Creates a new [BroadcastReceiver], which subscribes to the given [names].
+  /// Creates a new [BroadcastReceiver], which subscribes to the given [actions].
   ///
   /// At least one name needs to be provided.
-  BroadcastReceiver({required this.names})
-      : assert(names != null && names.length > 0),
+  BroadcastReceiver({required this.actions, required this.categories})
+      : assert(actions.length > 0),
         _id = ++_index;
 
   /// Returns true, if this [BroadcastReceiver] is currently listening for messages.
@@ -62,7 +65,8 @@ class BroadcastReceiver {
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'id': _id,
-        'names': names,
+        'actions': actions,
+        'categories': categories,
       };
 
   @override
@@ -73,7 +77,8 @@ class BroadcastReceiver {
   @override
   int get hashCode =>
       _id.hashCode ^
-      names.hashCode ^
+      actions.hashCode ^
+      categories.hashCode ^
       _subscription.hashCode ^
       _messages.hashCode;
 
@@ -82,7 +87,8 @@ class BroadcastReceiver {
     return identical(this, other) ||
         other is BroadcastReceiver &&
             other._id == _id &&
-            other.names == names &&
+            other.actions == actions &&
+            other.categories == categories &&
             other._messages == _messages &&
             other._subscription == _subscription;
   }

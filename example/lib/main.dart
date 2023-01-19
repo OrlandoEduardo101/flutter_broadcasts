@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   BroadcastReceiver receiver = BroadcastReceiver(
-    names: <String>[
+    actions: <String>[
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
   );
