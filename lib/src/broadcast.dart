@@ -25,7 +25,7 @@ class BroadcastMessage {
   ///
   /// On iOS, [data] is retrieved from [NSNotification.userInfo](https://developer.apple.com/documentation/foundation/nsnotification/1409222-userinfo)
   /// and sent using the same property.
-  final Map<String, dynamic>? data;
+  final Map<String, dynamic> data;
 
   /// The timestamp when this message was sent or retrieved.
   ///
@@ -47,14 +47,14 @@ class BroadcastMessage {
   /// Creates a new [BroadcastMessage], which can be sent using [sendBroadcast].
   BroadcastMessage({
     required this.name,
-    this.data,
+    required this.data,
   })  : timestamp = DateTime.now(),
         _receiverId = null;
 
   BroadcastMessage._fromMap(Map<dynamic, dynamic> map)
       : _receiverId = map['receiverId'],
         name = map['name'],
-        data = map['data'].cast<String, dynamic>(),
+        data = jsonDecode(map['data']),
         timestamp = map.containsKey('timestamp')
             ? DateTime.fromMillisecondsSinceEpoch(map['timestamp'])
             : null;

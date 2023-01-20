@@ -40,15 +40,12 @@ class CustomBroadcastReceiver(
         Log.d(TAG, "received intent " + intent?.action)
         intent?.let {
             val bundle = it.extras
-            val dataPairs = bundle?.keySet()?.map { key ->
-                Pair(key, bundle.get(key))
-            }
-            val data = dataPairs?.toMap() ?: mapOf()
-            listener(mapOf(
-                    "receiverId" to id,
-                    "name" to it.action!!,
-                    "data" to normalize(data)
-            ))
+            val map = mapOf(
+                "receiverId" to id,
+                "name" to it.action!!,
+                "data" to gson.toJson(bundle)
+            )
+            listener(map)
         }
     }
 
@@ -249,6 +246,7 @@ private fun normalize(x: Any?) : Any? {
         || x is LongArray
         || x is DoubleArray
         || x is FloatArray
+        || x is String
     ) {
     	return x
     } else if (x is List<*>) {
