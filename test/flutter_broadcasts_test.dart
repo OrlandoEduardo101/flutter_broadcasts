@@ -31,7 +31,7 @@ void main() {
 
   group("BroadcastReceiver", () {
     const MethodChannel channel =
-        MethodChannel('de.kevlatus.flutter_broadcasts');
+        MethodChannel('flutter_broadcasts');
 
     setUp(() {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {

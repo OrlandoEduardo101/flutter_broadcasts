@@ -174,7 +174,7 @@ class MethodCallHandlerImpl(
             stopListening()
         }
 
-        channel = MethodChannel(messenger, "de.kevlatus.flutter_broadcasts")
+        channel = MethodChannel(messenger, "flutter_broadcasts")
         channel!!.setMethodCallHandler(this)
     }
 
