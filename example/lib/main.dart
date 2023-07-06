@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
     actions: <String>[
       "de.kevlatus.flutter_broadcasts_example.demo_action",
     ],
+    categories: [],
   );
 
   @override
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
                 sendBroadcast(
                   BroadcastMessage(
                     name: "de.kevlatus.flutter_broadcasts_example.demo_action",
+                    data: {},
                   ),
                 );
               },
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                 print(snapshot.data);
                 switch (snapshot.connectionState) {
                   case ConnectionState.active:
-                    return Text(snapshot.data.name);
+                    return Text((snapshot.data?.name).toString());
 
                   case ConnectionState.none:
                   case ConnectionState.done:

@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group("BroadcastMessage", () {
     test('toMap returns a map containing a message\'s fields.', () async {
-      BroadcastMessage message = BroadcastMessage(name: "message.name.1");
+      BroadcastMessage message = BroadcastMessage(name: "message.name.1", data: {});
       var map = message.toMap();
 
       expect(map['name'], equals("message.name.1"));
-      expect(map['data'], isNull);
+      expect(map['data'], {});
       expect(map['timestamp'], isNotNull);
 
       final data = <String, dynamic>{
@@ -30,8 +30,7 @@ void main() {
   });
 
   group("BroadcastReceiver", () {
-    const MethodChannel channel =
-        MethodChannel('flutter_broadcasts');
+    const MethodChannel channel = MethodChannel('flutter_broadcasts');
 
     setUp(() {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
@@ -50,12 +49,12 @@ void main() {
     });
 
     test("beforeStart", () async {
-      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"], categories: []);
       expect(receiver.isListening, isFalse);
     });
 
     test("start", () async {
-      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"], categories: []);
       await receiver.start();
       expect(receiver.isListening, isTrue);
 
@@ -73,11 +72,11 @@ void main() {
     });
 
     test("stop", () {
-      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"], categories: []);
     });
 
     test("toMap", () {
-      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"]);
+      final receiver = BroadcastReceiver(actions: <String>["broadcast.name"], categories: []);
     });
   });
 }

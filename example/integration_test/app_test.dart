@@ -6,12 +6,10 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
-
 import 'package:flutter_broadcasts_example/main.dart' as app;
+import 'package:flutter_test/flutter_test.dart';
 
-void main() => run(_testMain);
+void main() => _testMain;
 
 void _testMain() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -24,8 +22,7 @@ void _testMain() {
 
     expect(
       find.byWidgetPredicate(
-        (Widget widget) =>
-            widget is Text && widget.data.startsWith('de.kevlatus'),
+        (Widget widget) => widget is Text && (widget.data?.startsWith('de.kevlatus') ?? false),
       ),
       findsOneWidget,
     );
